@@ -1,0 +1,20 @@
+#networks:
+#   mailcow-network:
+#     external: true
+
+services:
+ email-cron:
+    build: .
+    container_name: mailcow-lldap-sync-alias
+    env_file:
+      - .env
+    image: mp0185/mailcow-lldap-sync:1
+    restart: unless-stopped
+    environment:
+      - DB_USER=${DBUSER}
+      - DB_PASS=${DBPASS}
+      - DB_HOST=mysql-mailcow
+      - DB_NAME=${DBNAME}
+      - CRON_SCHEDULE=*/10 * * * *
+#    networks:
+#      - mailcow-network
