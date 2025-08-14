@@ -8,7 +8,6 @@ services:
     container_name: mailcow-lldap-sync-alias
     env_file:
       - .env
-    image: mp0185/mailcow-lldap-sync:1
     restart: unless-stopped
     environment:
       - DB_USER=${DBUSER}
@@ -18,3 +17,4 @@ services:
       - CRON_SCHEDULE=*/10 * * * *
 #    networks:
 #      - mailcow-network
+
