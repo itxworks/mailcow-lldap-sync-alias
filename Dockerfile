@@ -1,4 +1,6 @@
-FROM golang:1.24-alpine AS builder
+ARG GO_VERSION=1.26.2
+
+FROM golang:${GO_VERSION}-alpine AS builder
 
 RUN apk add bash ca-certificates git gcc g++ libc-dev
 
