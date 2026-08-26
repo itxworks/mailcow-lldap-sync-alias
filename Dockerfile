@@ -15,14 +15,14 @@ RUN go build -ldflags="-s -w" -o email-check main.go
 
 FROM alpine:latest
 
-# Install dependencies in one layer
+# Install dependencies - use busybox's crond instead of dcron
 RUN apk update && apk upgrade --no-cache && \
     apk add --no-cache \
         ca-certificates \
         bash \
         tzdata \
         curl \
-        dcron \
+        busybox-suid \
         && rm -rf /var/cache/apk/*
 
 
