@@ -14,6 +14,17 @@ steps:
     when:
      event: [ push, cron, manual, tag ]
 
+  dockle:
+    image: goodwithtech/dockle:latest
+    commands:
+      - dockle
+        --exit-code 1
+        --exit-level FATAL
+        registry.itxworks.eu/mailcow-lldap-sync:${CI_COMMIT_SHA:0:8}
+    when:
+      event: [ push, cron, manual, tag ]
+
+
   push-dockerhub:
     image: woodpeckerci/plugin-docker-buildx
     settings:
