@@ -1,12 +1,10 @@
-ARG GO_VERSION=1.26.5
+ARG GO_VERSION=1.27.0
 
 FROM golang:${GO_VERSION}-alpine AS builder
 
-RUN apk add bash ca-certificates git gcc g++ libc-dev
+RUN apk add --no-cache bash ca-certificates git gcc g++ libc-dev
 
 WORKDIR /app
-
-RUN apk add --no-cache git
 
 COPY go.mod go.sum ./
 RUN go mod download
@@ -16,12 +14,20 @@ COPY main.go .
 RUN go build -ldflags="-s -w" -o email-check main.go
 
 FROM alpine:latest
-RUN apk update && apk add ca-certificates \
-    && rm -rf /var/cache/apk/*
 
-RUN apk add --no-cache --upgrade bash
-RUN apk add --no-cache ca-certificates tzdata bash curl
+# Install dependencies in one layer
+RUN apk update && apk upgrade --no-cache && \
+    apk add --no-cache \
+        ca-certificates \
+        bash \
+        tzdata \
+        curl \
+        dcron \
+        && rm -rf /var/cache/apk/*
 
+
+# Set timezone
+ENV TZ=UTC
 
 COPY --from=builder /app/email-check /app/email-check
 COPY entrypoint.sh /entrypoint.sh
